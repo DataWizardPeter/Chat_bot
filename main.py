@@ -13,13 +13,21 @@ from langchain.schema import Document
 from dotenv import load_dotenv
 import base64
 
-# Set Streamlit page config first
+# Set Streamlit page config
 st.set_page_config(page_title="BullBear BOT: Conquer the Bulls and Bears", page_icon="📊", layout="wide")
 
 # Load environment variables
 load_dotenv()
 
-# Function to encode the image file to base64
+# Retrieve OpenAI API key from Streamlit Secrets
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    st.error("OpenAI API key not found. Please configure it in the Streamlit Cloud Secrets.")
+
+# Initialize OpenAI LLM
+llm = OpenAI(api_key=api_key, temperature=0.9, max_tokens=500)
+
+# Function to encode image file to base64
 def get_base64_of_bin_file(bin_file):
     try:
         with open(bin_file, 'rb') as f:
@@ -30,7 +38,7 @@ def get_base64_of_bin_file(bin_file):
         return None
 
 # Specify the local image path
-image_path = "3d-rendering-financial-neon-bull (2).jpg"  # Replace with your image file name
+image_path = "C://Users//peter//Downloads//3d-rendering-financial-neon-bull.jpg"  # Replace with your image file name
 
 # Generate the base64 string
 base64_image = get_base64_of_bin_file(image_path)
@@ -95,8 +103,6 @@ process_url_clicked = st.sidebar.button("Process URLs")
 file_path = "faiss_store_openai.pkl"
 main_placeholder = st.empty()
 
-llm = OpenAI(temperature=0.9, max_tokens=500)
-
 # Function to fetch and extract text from a URL using BeautifulSoup
 def fetch_and_extract_text(url):
     try:
@@ -136,7 +142,7 @@ if process_url_clicked:
                     docs = text_splitter.split_documents(all_documents)
 
                     # Create embeddings and save to FAISS index
-                    embeddings = OpenAIEmbeddings()
+                    embeddings = OpenAIEmbeddings(api_key=api_key)
                     vectorstore_openai = FAISS.from_documents(docs, embeddings)
                     main_placeholder.text("Embedding Vector Started Building... ✅✅✅")
                     time.sleep(2)
