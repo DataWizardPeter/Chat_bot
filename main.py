@@ -19,15 +19,15 @@ st.set_page_config(page_title="BullBear BOT: Conquer the Bulls and Bears", page_
 # Load environment variables
 load_dotenv()
 
-# Retrieve OpenAI API key from Streamlit Cloud Secrets
+# Retrieve OpenAI API key
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
-    st.error("OpenAI API key not found. Please configure it in the Streamlit Cloud Secrets.")
+    st.error("OpenAI API key not found. Please configure it in your environment or secrets.")
 
 # Initialize OpenAI LLM
 llm = OpenAI(api_key=api_key, temperature=0.9, max_tokens=500)
 
-# Function to encode image file to base64
+# Function to encode an image file to Base64
 def get_base64_of_bin_file(bin_file):
     try:
         with open(bin_file, "rb") as f:
@@ -39,7 +39,7 @@ def get_base64_of_bin_file(bin_file):
 # Dynamically generate the correct image path
 image_path = os.path.join(os.path.dirname(__file__), "imagechatbot.jpg")
 
-# Check if the image file exists and encode to Base64
+# Check if the image file exists and encode it
 if os.path.exists(image_path):
     base64_image = get_base64_of_bin_file(image_path)
     if base64_image:
@@ -48,42 +48,17 @@ if os.path.exists(image_path):
         st.error("Failed to encode the image to Base64.")
 else:
     st.error(f"Image file not found: {image_path}")
-    # Optional: Fallback to a public URL
+    # Optional: Fallback to a public placeholder image
     image_url = "https://via.placeholder.com/1920x1080"
 
-# Add custom styles for background image
+# Add custom styles for the background image
 st.markdown(f"""
     <style>
-    body {{
+    .stApp {{
         background-image: url("{image_url}");
         background-size: cover;
         background-repeat: no-repeat;
         background-attachment: fixed;
-    }}
-    .stButton > button {{
-        background-color: #4CAF50;
-        color: white;
-        border-radius: 12px;
-        padding: 10px 24px;
-        font-size: 16px;
-    }}
-    .stTextInput>div>div>input {{
-        font-size: 16px;
-        padding: 10px;
-    }}
-    .stHeader {{
-        color: #4CAF50;
-        font-size: 36px;
-        font-weight: bold;
-    }}
-    .stSubheader {{
-        color: #ff8c00;
-        font-size: 24px;
-        font-weight: bold;
-    }}
-    .stError {{
-        color: #d32f2f;
-        font-size: 18px;
     }}
     </style>
     """, unsafe_allow_html=True)
@@ -155,10 +130,7 @@ if process_url_clicked:
             except requests.exceptions.RequestException as e:
                 st.error(f"Error while fetching content from URLs: {e}")
             except Exception as e:
-                if "insufficient_quota" in str(e):
-                    st.error("The API key used in this project has reached the free $5 quota limit. Please wait until the deployer upgrades the plan to continue.")
-                else:
-                    st.error(f"An unexpected error occurred: {e}")
+                st.error(f"An unexpected error occurred: {e}")
 
 query = main_placeholder.text_input("Ask a Question about the News Articles:", placeholder="What do you want to know?")
 
@@ -182,9 +154,6 @@ if query:
                     for source in sources_list:
                         st.write(f"- {source}")
             except Exception as e:
-                if "insufficient_quota" in str(e):
-                    st.error("The API key used in this project has reached the free $5 quota limit. Please wait until the deployer upgrades the plan to continue.")
-                else:
-                    st.error(f"An unexpected error occurred: {e}")
+                st.error(f"An unexpected error occurred: {e}")
     else:
         st.warning("No FAISS index found. Please process the URLs first.")
