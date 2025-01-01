@@ -19,7 +19,7 @@ st.set_page_config(page_title="BullBear BOT: Conquer the Bulls and Bears", page_
 # Load environment variables
 load_dotenv()
 
-# Retrieve OpenAI API key from Streamlit Secrets
+# Retrieve OpenAI API key from Streamlit Cloud Secrets
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     st.error("OpenAI API key not found. Please configure it in the Streamlit Cloud Secrets.")
@@ -31,23 +31,25 @@ llm = OpenAI(api_key=api_key, temperature=0.9, max_tokens=500)
 def get_base64_of_bin_file(bin_file):
     try:
         with open(bin_file, 'rb') as f:
-            data = f.read()
-        return base64.b64encode(data).decode()
+            return base64.b64encode(f.read()).decode('utf-8')
     except Exception as e:
-        st.error(f"Error encoding image to base64: {e}")
+        st.error(f"Error reading file: {e}")
         return None
 
 # Specify the local image path
 image_path = "3d-rendering-financial-neon-bull (2).jpg"  # Replace with your image file name
 
-# Generate the base64 string
-base64_image = get_base64_of_bin_file(image_path)
-
-# If base64 encoding fails, use a direct image URL (fallback)
-if not base64_image:
-    image_url = "https://example.com/your_image.jpg"  # Replace with your image URL
+# Check if the image file exists and encode to Base64
+if os.path.exists(image_path):
+    base64_image = get_base64_of_bin_file(image_path)
+    if base64_image:
+        image_url = f"data:image/jpg;base64,{base64_image}"
+    else:
+        st.error("Failed to encode the image to Base64.")
 else:
-    image_url = f"data:image/jpg;base64,{base64_image}"
+    st.error(f"Image file not found: {image_path}")
+    # Optional: Fallback to a public URL
+    image_url = "https://via.placeholder.com/1920x1080"
 
 # Add custom styles for background image
 st.markdown(f"""
