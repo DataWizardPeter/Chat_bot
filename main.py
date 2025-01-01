@@ -37,7 +37,7 @@ def get_base64_of_bin_file(bin_file):
         return None
 
 # Specify the local image path
-image_path = "3d-rendering-financial-neon-bull (2).jpg"  # Replace with your image file name
+image_path = "imagechatbot.jpg"  # Replace with your image file name
 
 # Check if the image file exists and encode to Base64
 if os.path.exists(image_path):
