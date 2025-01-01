@@ -30,7 +30,7 @@ def get_base64_of_bin_file(bin_file):
         return None
 
 # Specify the local image path
-image_path = "C://Users//peter//Downloads//3d-rendering-financial-neon-bull.jpg"  # Replace with your image file name
+image_path = "3d-rendering-financial-neon-bull (2).jpg"  # Replace with your image file name
 
 # Generate the base64 string
 base64_image = get_base64_of_bin_file(image_path)
