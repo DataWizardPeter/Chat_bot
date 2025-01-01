@@ -9,4 +9,4 @@ unstructured==0.9.2
 tiktoken==0.8.0
 libmagic==1.0
 python-magic==0.4.27
-langchain==0.3.13
+langchain_community==0.3.12
