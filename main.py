@@ -30,14 +30,14 @@ llm = OpenAI(api_key=api_key, temperature=0.9, max_tokens=500)
 # Function to encode image file to base64
 def get_base64_of_bin_file(bin_file):
     try:
-        with open(bin_file, 'rb') as f:
-            return base64.b64encode(f.read()).decode('utf-8')
+        with open(bin_file, "rb") as f:
+            return base64.b64encode(f.read()).decode("utf-8")
     except Exception as e:
         st.error(f"Error reading file: {e}")
         return None
 
-# Specify the local image path
-image_path = "imagechatbot.jpg"  # Replace with your image file name
+# Dynamically generate the correct image path
+image_path = os.path.join(os.path.dirname(__file__), "imagechatbot.jpg")
 
 # Check if the image file exists and encode to Base64
 if os.path.exists(image_path):
