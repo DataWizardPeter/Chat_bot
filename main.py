@@ -37,7 +37,7 @@ def get_base64_of_bin_file(bin_file):
         return None
 
 # Dynamically generate the correct image path
-image_path = os.path.join(os.path.dirname(__file__), "imagechatbot.jpg")
+image_path = os.path.join(os.path.dirname(__file__), "botimage2.jpg")
 
 # Check if the image file exists and encode it
 if os.path.exists(image_path):
